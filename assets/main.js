@@ -22,7 +22,7 @@ const h4 = document.getElementById("h4"); // ingre
 const h2 = document.getElementById("h2"); // price
 const container = document.querySelector(".card-principal");
 
-const arrayDePizzas = [
+const arrayDePizzas = JSON.parse(localStorage.getItem("pizzas")) || [
   {
     id: 1,
     nombre: "Napolitana",
@@ -61,14 +61,14 @@ const arrayDePizzas = [
   },
 ];
 
-let pizzasLS = JSON.parse(localStorage.getItem("pizzas"));
-
 const saveToLocalStorage = () => {
-  localStorage.setItem("pizzas", JSON.stringify(arrayDePizzas));
+  return !localStorage.getItem("pizzas")
+    ? localStorage.setItem("pizzas", JSON.stringify(arrayDePizzas))
+    : null;
 };
 
 const rendering = (valor) => {
-  const pizzaFinded = pizzasLS.find((pizza) => pizza.id === +valor);
+  const pizzaFinded = arrayDePizzas.find((pizza) => pizza.id === +valor);
 
   h1.textContent = pizzaFinded.nombre;
   h4.textContent = pizzaFinded.ingredientes;
@@ -155,6 +155,8 @@ const renderPizza = (e) => {
 };
 
 const init = () => {
+  saveToLocalStorage();
+
   form.addEventListener("submit", renderPizza);
 };
 
